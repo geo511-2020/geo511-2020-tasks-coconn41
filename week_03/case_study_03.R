@@ -11,7 +11,7 @@ ggplot(GapMKuwait,aes(lifeExp,gdpPercap))+
   scale_y_continuous(trans = 'sqrt')+
   facet_wrap(~year,nrow=1) +
   xlab("Life Expectancy") +
-  ylab(" GDP per capita") +
+  ylab("GDP per capita") +
   scale_size_continuous("Population (100k)") +
   scale_color_discrete("Continent") +
   theme_bw()
@@ -24,12 +24,13 @@ gapminder_continent = GapMKuwait %>%
     pop = sum(as.numeric(pop)))
 
 #plot # 2
-ggplot(GapMKuwait, aes(x=year,y=gdpPercap,
-  color=continent,group=country)) +
+ggplot(GapMKuwait,aes(year,gdpPercap,group=country,color=continent)) +
   geom_point() +
   geom_line() +
-  geom_point(data=gapminder_continent,aes(x=year,y=gdpPercapweighted)) +
-  facet_wrap(~continent) +
+  geom_point(data=gapminder_continent,aes(x=year,y=gdpPercapweighted,size=pop/100000),inherit.aes = F) +
+  geom_line(data=gapminder_continent,aes(x=year,y=gdpPercapweighted),inherit.aes = FALSE) +
+  scale_size_continuous("Population (100k)") +
+  scale_color_discrete("Continent") +
+  facet_wrap(~continent,nrow=1) +
   theme_bw()
-#Can't get to work, after including second geom_point, it returns country not found
-  
+
