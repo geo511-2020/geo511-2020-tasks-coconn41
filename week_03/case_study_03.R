@@ -15,7 +15,7 @@ ggplot(GapMKuwait,aes(lifeExp,gdpPercap))+
   scale_size_continuous("Population (100k)") +
   scale_color_discrete("Continent") +
   theme_bw()
-ggsave("CS3plot1.png")
+ggsave("CS3plot1.png",width=15,units='in')
 #grouping
 gapminder_continent = GapMKuwait %>%
   group_by(continent,year) %>%
@@ -35,5 +35,5 @@ ggplot(GapMKuwait,aes(year,gdpPercap,group=country,color=continent)) +
   theme_bw()
 #this link is where I found out about inherit.aes = FALSE:
 # https://stackoverflow.com/questions/40391272/ggplot-object-not-found-error-when-adding-layer-with-different-data
-ggsave("CS3plot2.png")
+ggsave("CS3plot2.png",width=15,units = 'in')
 
