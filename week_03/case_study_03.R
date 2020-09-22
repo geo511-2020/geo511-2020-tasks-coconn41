@@ -31,6 +31,8 @@ ggplot(GapMKuwait,aes(year,gdpPercap,group=country,color=continent)) +
   geom_line(data=gapminder_continent,aes(x=year,y=gdpPercapweighted),inherit.aes = FALSE) +
   scale_size_continuous("Population (100k)") +
   scale_color_discrete("Continent") +
+  ylab("GDP per capita") +
+  xlab("Year") +
   facet_wrap(~continent,nrow=1) +
   theme_bw()
 #this link is where I found out about inherit.aes = FALSE:
