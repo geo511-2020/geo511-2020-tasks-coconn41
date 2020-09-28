@@ -22,48 +22,48 @@ nycairports= a %>% filter(dest=="JFK" | dest=="LGA" | dest=="EWR") %>%
 pythag=function(w,x,y,z){ #such that y and z are lat long of NYC airports
 sqrt(((w-y)^2)+((x-z)^2))}
 
-EWRdistances=NULL
+distances=NULL
 for (i in 1:nrow(EWRdestairs)){
   destlatitude = EWRdestairs$lat[i]
   destlongitude = EWRdestairs$lon[i]
-  if(is.null(EWRdistances)==TRUE){  
-    EWRdistances=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)}
+  if(is.null(distances)==TRUE){  
+    distances=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)}
   else{
     c=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)
-    EWRdistances = rbind(EWRdistances,c)}
-  if(nrow(EWRdistances)==nrow(EWRdestairs)){
-    cbind(EWRdestairs,EWRdistances)
-    EWRmax= EWRdestairs %>% slice(which.max(EWRdistances))
+    distances = rbind(distances,c)}
+  if(NROW(distances)==NROW(EWRdestairs)){
+    EWRdestairs=cbind(EWRdestairs,distances)
+    EWRmax= EWRdestairs %>% slice(which.max(distances))
   }
 }
 
-JFKdistances=NULL
+distances=NULL
 for (i in 1:nrow(JFKdestairs)){
   destlatitude = JFKdestairs$lat[i]
   destlongitude = JFKdestairs$lon[i]
-if(is.null(JFKdistances)==TRUE){  
-  JFKdistances=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)}
+if(is.null(distances)==TRUE){  
+  distances=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)}
 else{
   c=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)
-JFKdistances = rbind(JFKdistances,c)}
-  if(nrow(JFKdistances)==nrow(JFKdestairs)){
-    JFKdestairs=cbind(JFKdestairs,JFKdistances)
-  JFKmax=JFKdestairs %>% slice(which.max(JFKdistances))
+distances = rbind(distances,c)}
+  if(NROW(distances)==NROW(JFKdestairs)){
+     JFKdestairs=cbind(JFKdestairs,distances)
+  JFKmax=JFKdestairs %>% slice(which.max(distances))
     }
 }
 
-LGAdistances=NULL
+distances=NULL
 for (i in 1:nrow(LGAdestairs)){
   destlatitude = LGAdestairs$lat[i]
   destlongitude = LGAdestairs$lon[i]
   if(is.null(LGAdestairs$distancecalc==TRUE)){  
-    LGAdistances=pythag(nycairports$lat[3],nycairports$lon[3],destlatitude,destlongitude)}
+    distances=pythag(nycairports$lat[3],nycairports$lon[3],destlatitude,destlongitude)}
   else{
     c=pythag(nycairports$lat[3],nycairports$lon[3],destlatitude,destlongitude)
-    LGAdistances = rbind(LGAdistances,c)}
-  if(nrow(LGAdistances)==nrow(LGAdestairs)){
-  LGAdestairs=cbind(LGAdestairs,LGAdistances)
-  LGAmax=LGAdestairs %>% slice(which.max(LGAdistances))
+    distances = rbind(distances,c)}
+  if(NROW(distances)==NROW(LGAdestairs)){
+  LGAdestairs=cbind(LGAdestairs,distances)
+  LGAmax=LGAdestairs %>% slice(which.max(distances))
   }
 }
 #find airport furthest away from each NYC Airport
