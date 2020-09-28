@@ -31,6 +31,10 @@ for (i in 1:nrow(EWRdestairs)){
   else{
     c=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)
     EWRdistances = rbind(EWRdistances,c)}
+  if(nrow(EWRdistances)==nrow(EWRdestairs)){
+    cbind(EWRdestairs,EWRdistances)
+    EWRmax= EWRdestairs %>% slice(which.max(EWRdistances))
+  }
 }
 
 JFKdistances=NULL
@@ -42,6 +46,10 @@ if(is.null(distances)==TRUE){
 else{
   c=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)
 JFKdistances = rbind(JFKdistances,c)}
+  if(nrow(JFKdistances)==nrow(JFKdestairs)){
+    JFKdestairs=cbind(JFKdestairs,JFKdistances)
+  JFKmax=JFKdestairs %>% slice(which.max(JFKdistances))
+    }
 }
 
 LGAdistances=NULL
@@ -55,7 +63,10 @@ for (i in 1:nrow(LGAdestairs)){
     LGAdistances = rbind(LGAdistances,c)}
   if(nrow(LGAdistances)==nrow(LGAdestairs)){
   LGAdestairs=cbind(LGAdestairs,LGAdistances)
+  LGAmax=LGAdestairs %>% slice(which.max(LGAdistances))
   }
 }
 #find airport furthest away from each NYC Airport
-maxjfk=JFKdistances[JFKdistances$V1==max(JFKdistances)]
+x1=rbind(EWRmax,JFKmax)
+x2=rbind(x1,LGAmax)
+finaldf=x2[c(2,23,27)]
