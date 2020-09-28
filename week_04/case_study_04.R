@@ -26,7 +26,7 @@ EWRdistances=NULL
 for (i in 1:nrow(EWRdestairs)){
   destlatitude = EWRdestairs$lat[i]
   destlongitude = EWRdestairs$lon[i]
-  if(is.null(distances)==TRUE){  
+  if(is.null(EWRdistances)==TRUE){  
     EWRdistances=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)}
   else{
     c=pythag(nycairports$lat[1],nycairports$lon[1],destlatitude,destlongitude)
@@ -41,7 +41,7 @@ JFKdistances=NULL
 for (i in 1:nrow(JFKdestairs)){
   destlatitude = JFKdestairs$lat[i]
   destlongitude = JFKdestairs$lon[i]
-if(is.null(distances)==TRUE){  
+if(is.null(JFKdistances)==TRUE){  
   JFKdistances=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)}
 else{
   c=pythag(nycairports$lat[2],nycairports$lon[2],destlatitude,destlongitude)
