@@ -69,4 +69,4 @@ for (i in 1:nrow(LGAdestairs)){
 #find airport furthest away from each NYC Airport
 x1=rbind(EWRmax,JFKmax)
 x2=rbind(x1,LGAmax)
-finaldf=x2[c(2,23,27)]
+finaldf=x2[c(2,21,23,27)]
