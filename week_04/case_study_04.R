@@ -19,9 +19,7 @@ EWRdestairs=a %>% filter(origin=="EWR") %>%
 #Coordinates of NYC Airports
 nycairports= a %>% filter(dest=="JFK" | dest=="LGA" | dest=="EWR") %>%
   distinct(dest,.keep_all = T)
-#create function for pythagorean theorem
-#pythag=function(w,x,y,z){ #such that y and z are lat long of NYC airports
-#sqrt(((w-y)^2)+((x-z)^2))}
+
 
 distances=NULL
 for (i in 1:nrow(EWRdestairs)){
