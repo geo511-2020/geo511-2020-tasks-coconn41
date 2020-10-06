@@ -3,6 +3,7 @@ library(spData)
 library(tidyverse)
 library(tmap)
 library(raster)
+library(units)
 data(world)
 data(us_states)
 CAN= world %>% filter(name_long == "Canada")
@@ -54,3 +55,5 @@ tm_shape(NYSnameproj) + tm_graticules() + tm_borders() + tm_fill(col="grey") +
 
 Areaofintersect=st_area(bufintersect)
 #3487834996 m^2
+Areainkm=set_units(Areaofintersect,km^2)
+# 3487.835 km^2
