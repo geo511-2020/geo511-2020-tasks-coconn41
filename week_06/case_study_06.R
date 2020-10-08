@@ -33,11 +33,11 @@ monthlyvals=NULL
 pb = txtProgressBar(min = 0, max = nlayers(tmaxbrick), initial = 0, style = 3) 
 for (i in 1:nlayers(tmax_monthly)){
   if(is.null(monthlyvals)==TRUE){ 
-  montlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
+  montlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE)
   montlyvalsmax=monthlyvals@data %>%
     slice(which.max(tmax1))}
   else{
-  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
+  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE)
   monthlyvals=cbind(monthlyvals,nmvals)
   thismonthshigh=nmvals@data %>%
     slice(which.max(paste("tmax",i,sep="")))
