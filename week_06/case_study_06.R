@@ -30,11 +30,11 @@ highestavg=meansummary@data %>%
 
 tmaxbrick=brick(tmax_monthly)
 monthlyvals=NULL
-pb = txtProgressBar(min = 0, max = nlayers(tmaxbrick), initial = 0, style = 3) 
+pb = txtProgressBar(min = 0, max = nlayers(tmax_monthly), initial = 0, style = 3) 
 for (i in 1:nlayers(tmax_monthly)){
-  if(is.null(monthlyvals)==TRUE){ 
-  montlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE)
-  montlyvalsmax=monthlyvals@data %>%
+  if(is.null(monthlyvals)){ 
+  monthlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE)
+  monthlyvalsmax=monthlyvals@data %>%
     slice(which.max(tmax1))}
   else{
   nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE)
