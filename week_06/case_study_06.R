@@ -25,24 +25,21 @@ worldwoAnt=world %>%
 #extract by country
 meansummary=raster::extract(tmean,worldwoAnt,fun=mean,sp=TRUE) 
 highestavg=meansummary@data %>%
-  slice(which.max(c(2))
-
-testsummary=raster::extract(tmax_monthly[[2]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
-testhighav=testsummary@data
+  slice(which.max(CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))
 
 
 tmaxbrick=brick(tmax_monthly)
 monthlyvals=NULL
 pb = txtProgressBar(min = 0, max = nlayers(tmaxbrick), initial = 0, style = 3) 
 for (i in 1:nlayers(tmax_monthly)){
-  if(is.null(mnthlyvals)==TRUE){ 
-  montlyvals=raster::extract(tmaxbrick[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
+  if(is.null(monthlyvals)==TRUE){ 
+  montlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
   montlyvalsmax=monthlyvals@data %>%
     slice(which.max(tmax1))}
   else{
-  nmvals=raster::extract(tmaxbrick[[i]],worldwoAnt,fun=mean,sp=TRUE)
+  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
   monthlyvals=cbind(monthlyvals,nmvals)
-  thismonthshigh=monthlyvals@data %>%
+  thismonthshigh=nmvals@data %>%
     slice(which.max(paste("tmax",i,sep="")))
   monthlyvalsmax=rbind(monthlyvalsmax,thismonthshigh)
   }
