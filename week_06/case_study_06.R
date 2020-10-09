@@ -28,7 +28,6 @@ highestavg=meansummary@data %>%
   slice(base::which.max(CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))
 
 
-tmaxbrick=brick(tmax_monthly)
 monthlyvals=NULL
 pb = txtProgressBar(min = 0, max = nlayers(tmax_monthly), initial = 0, style = 3) 
 for (i in 1:nlayers(tmax_monthly)){
@@ -40,8 +39,8 @@ for (i in 1:nlayers(tmax_monthly)){
   names(monthlyvalsmax)[2]="max_temp"}
   else{
   nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
-  names(nmvals@data)[2]="max_temp"
   monthlyvals=merge(monthlyvals,nmvals,by="name_long")
+  names(nvals@data)[2]="max_temp"
   thismonthshigh=nmvals@data %>%
     slice(which.max(max_temp))
   thismonthshigh$month=i
