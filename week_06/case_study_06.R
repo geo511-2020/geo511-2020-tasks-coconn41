@@ -23,7 +23,7 @@ worldwoAnt=world %>%
   select(name_long,continent,geom)
 
 #extract by country
-meansummary=raster::extract(tmean,worldwoAnt,fun=mean,sp=TRUE) 
+meansummary=raster::extract(tmean,worldwoAnt,fun=max,sp=TRUE) 
 highestavg=meansummary@data %>%
   group_by(continent) %>%
   slice(base::which.max(CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))
@@ -34,14 +34,14 @@ monthlyvals=NULL
 pb = txtProgressBar(min = 0, max = nlayers(tmax_monthly), initial = 0, style = 3) 
 for (i in 1:nlayers(tmax_monthly)){
   if(is.null(monthlyvals)){ 
-  monthlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
+  monthlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=max,sp=TRUE,na.rm=TRUE)
   monthlyvalsmax=monthlyvals@data %>%
     group_by(continent) %>%
     slice(which.max(tmax1))
   monthlyvalsmax$month=i
   names(monthlyvalsmax)[3]="max_temp"}
   else{
-  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=mean,sp=TRUE,na.rm=TRUE)
+  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=max,sp=TRUE,na.rm=TRUE)
   monthlyvals=merge(monthlyvals,nmvals,by="name_long")
   names(nmvals@data)[3]="max_temp"
   thismonthshigh=nmvals@data %>%
@@ -72,5 +72,5 @@ highestmeanbymonth= monthlyvals@data %>%
 # Highest spatially averaged max temperatures for each country and each month
 # are shown in monthlyvals@data dataset
 
-
+# how to plot????
 
