@@ -5,6 +5,7 @@ library(tidyverse)
 library(sf)
 library(ncdf4)
 library(tmap)
+library(viridis)
 
 #Load all data
 data(world)  #load 'world' data from spData package
@@ -15,62 +16,44 @@ download.file("https://crudata.uea.ac.uk/cru/data/temperature/absolute.nc","crud
 tmean=raster("crudata.nc")
 crs(tmean) #tmean is WGS84
 
+#Spatial World
+worldspatial=as(world,"Spatial")
+
+
 #remove antarctica
-unique(world$continent)
+unique(worldspatial$continent)
 # Spelled "Antarctica"
 worldwoAnt=world %>% 
   filter(continent != "Antarctica") %>% 
   select(name_long,continent,geom)
 
-#extract by country
-meansummary=raster::extract(tmean,worldwoAnt,fun=max,sp=TRUE) 
-highestavg=meansummary@data %>%
+#per website, data is in degrees Celcius
+
+tmax_annual=max(tmax_monthly)
+names(tmax_annual) = "tmax"
+
+
+highval=raster::extract(tmax_annual,worldwoAnt,na.rm=TRUE,small=TRUE,sp=TRUE,fun=max)
+
+tm_shape(highval) +
+  tm_polygons(col="tmax",
+              style = "cont",
+              palette="viridis",
+              title = "Annual\nMaximum\nTemperature (C)",
+              legend.is.portrait=F,
+              title.pos) +
+  tm_layout(legend.outside=TRUE,
+            legend.outside.position = "bottom",
+            legend.outside.size = .7)
+
+#needs adjustment ^
+
+
+hotcontinent = highval@data %>%
   group_by(continent) %>%
-  slice(base::which.max(CRU_Global_1961.1990_Mean_Monthly_Surface_Temperature_Climatology))
-
-contmean=
-
-monthlyvals=NULL
-pb = txtProgressBar(min = 0, max = nlayers(tmax_monthly), initial = 0, style = 3) 
-for (i in 1:nlayers(tmax_monthly)){
-  if(is.null(monthlyvals)){ 
-  monthlyvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=max,sp=TRUE,na.rm=TRUE)
-  monthlyvalsmax=monthlyvals@data %>%
-    group_by(continent) %>%
-    slice(which.max(tmax1))
-  monthlyvalsmax$month=i
-  names(monthlyvalsmax)[3]="max_temp"}
-  else{
-  nmvals=raster::extract(tmax_monthly[[i]],worldwoAnt,fun=max,sp=TRUE,na.rm=TRUE)
-  monthlyvals=merge(monthlyvals,nmvals,by="name_long")
-  names(nmvals@data)[3]="max_temp"
-  thismonthshigh=nmvals@data %>%
-    group_by(continent) %>%
-    slice(which.max(max_temp))
-  thismonthshigh$month=i
-  monthlyvalsmax=rbind(monthlyvalsmax,thismonthshigh)
-  }
-  setTxtProgressBar(pb,i)
-}
-
-monthlyvals@data$yearlyavg=rowMeans(monthlyvals@data[,3:14],na.rm = TRUE)
-highestmeanbymonth= monthlyvals@data %>%
-  group_by(continent) %>%
-  slice(which.max(yearlyavg))
+  slice(which.max(tmax)) %>%
+  arrange('descending')
 
 
 
-#CONCLUSIONS:
-
-# Highest average for each continent from tmean dataset is 
-# shown in highestavg table
-
-# Highest spatial average max temperature country from 
-# each continent (t_max dataset)
-# is shown in the highestmeanbymonth dataset
-
-# Highest spatially averaged max temperatures for each country and each month
-# are shown in monthlyvals@data dataset
-
-# how to plot????
 
