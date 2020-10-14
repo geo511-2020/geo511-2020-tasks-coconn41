@@ -1,0 +1,44 @@
+---
+title: "Project_Proposal"
+author: "Collin O'Connor"
+date: "10/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem / Question:
+
+The deer tick or blacklegged tick (<i>Ixodes scapularis</i>) is the most medically relevant species of hard tick that in New York State (NYS). <i>I. scapularis</i> populations in NYS may carry a plethora of pathogens, including but not limited to:
+
+* <i>Borrelia burgdorferi</i> - the causitive agent of Lyme disease
+* <i>Anaplasma phagocytophilum</i> - the causitive agent of human granulocytic anaplasmosis
+* <i>Babesia microti</i> - the causitive agent of babesiosis in humans
+* <i>Borrelia miyamotoi</i> - causative of a relapsing tick fever 
+
+The prevalence of the above pathogens varies both spatially and temporally in NYS, which results in varying risk for NYS citizens. 
+
+
+
+
+
+
+
+
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
