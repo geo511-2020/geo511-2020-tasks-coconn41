@@ -28,14 +28,13 @@ worldwoAnt=world %>%
   filter(continent != "Antarctica") %>%
   filter(name_long != "French Southern and Antarctic Lands")
 
-#per website, data is in degrees Celcius?????
 
 tmax_annual=max(tmax_monthly)
 names(tmax_annual) = "tmax"
 
 
 highval=raster::extract(tmax_annual,worldwoAnt,na.rm=TRUE,small=TRUE,sp=TRUE,fun=max)
-
+highvalsf=st_as_sf(highval)
 tm_shape(highval) +
   tm_graticules() +
   tm_polygons(col="tmax",
@@ -44,14 +43,15 @@ tm_shape(highval) +
               title = "Annual\nMaximum\nTemperature (C)",
               legend.is.portrait=F) +
   tm_layout(legend.outside=TRUE,
-            legend.outside.position = "bottom") 
-  
+            legend.outside.position = "bottom")
 
+    
+?guide_colorbar
 # table below
 
 hotcontinent = highval@data %>%
   group_by(continent) %>%
-  slice(which.max(tmax)) %>%
+  slice(which.max(tmax)) #%>%
   arrange('descending')
 
 view(hotcontinent)
