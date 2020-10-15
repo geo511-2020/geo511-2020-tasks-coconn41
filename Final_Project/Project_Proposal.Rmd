@@ -27,7 +27,7 @@ The deer tick or blacklegged tick (<i>Ixodes scapularis</i>) is the most medical
 * <i>Babesia microti</i> - the causitive agent of babesiosis in humans
 * <i>Borrelia miyamotoi</i> - causative of a relapsing tick fever 
 
-The prevalence of the above pathogens varies both spatially and temporally in NYS, which results in varying risk for NYS citizens. Because these pathogens are not transmitted from tick to tick transovarially, they are required to be maintained throughout populations of animal hosts in the various ecosystems of NYS. Data suggests that certain land use and land cover types are beneficial for populations of animals which maintain these pathogens. This project aims to explore any trends between pathogen prevalence within <i>I. scapularis</i> at the county level and land use / land cover types in NYS.
+The prevalence of the above pathogens varies both spatially and temporally in NYS, which results in varying risk for NYS citizens. Because these pathogens are not transmitted from tick to tick transovarially, they are required to be maintained throughout populations of animal hosts in the various ecosystems of NYS. Data suggests that certain land use and land cover types are beneficial for populations of animals which maintain these pathogens, and potentially for the pathogen's themselves. This project aims to explore any trends between pathogen prevalence within <i>I. scapularis</i> at the county level and land use / land cover types in NYS.
 
 
 
@@ -62,22 +62,87 @@ There are three data sources required for this project:
 3. Spatial polygon data of NYS Counties
 
 ### Tick pathogen prevalence data
-The New York State Department of Health (NYSDOH) Vector Ecology Lab conducts seasonal tick-surveys throughout NYS. These surveys measure density of ticks in the environment, and also measure the pathogen prevalence of <i>B. burgdorferi</i>, <i>A. phagocytophilum</i>, <i>B. microti</i>, and <i>B. miyamotoi</i> in the collected ticks. Pathogen prevalence is determined through PCR testing of individual tick specimens. These data are available to the public via [Health Data NY](https://health.data.ny.gov/), for both [adult](https://health.data.ny.gov/Health/Access-Adult-Deer-Tick-Collection-Data-by-County-E/fkdr-6a5t) and [nymphal](https://health.data.ny.gov/Health/Access-Nymph-Deer-Tick-Collection-Data-by-County-E/7qid-kum3) tick density. These data on Health Data NY show tables and maps, but do not conduct any statistical testing or plot any time-series charts. They also do not utilize and ecological data, as is the goal of this project.
+The New York State Department of Health (NYSDOH) Vector Ecology Lab conducts seasonal tick-surveys throughout NYS. These surveys measure density of ticks in the environment, and also measure the pathogen prevalence of <i>B. burgdorferi</i>, <i>A. phagocytophilum</i>, <i>B. microti</i>, and <i>B. miyamotoi</i> in the collected ticks. Pathogen prevalence is determined through PCR testing of individual tick specimens. These data are available to the public via [Health Data NY](https://health.data.ny.gov/), for both [adult](https://health.data.ny.gov/Health/Access-Adult-Deer-Tick-Collection-Data-by-County-E/fkdr-6a5t) and [nymphal](https://health.data.ny.gov/Health/Access-Nymph-Deer-Tick-Collection-Data-by-County-E/7qid-kum3) tick density. These data on Health Data NY show tables and maps, but do not conduct any statistical testing or plot any time-series charts. They also do not utilize and ecological data, as is the goal of this project. This project will only be looking at adult tick data, as there are generally more adult tick samples from collections.
 
 ### Land use / land cover data
-Quality raster data for land use and/or land cover type is available from different sources. For this project, I plan to use the [National Land Cover Dataset (NLCD) 2016 (CONUS)](https://www.mrlc.gov/data/nlcd-2016-land-cover-conus). The NLCD 
+Quality raster data for land use and/or land cover type is available from different sources. For this project, I plan to use the National Land Cover Dataset (NLCD) 2016 (CONUS). The NLCD 2016 is available for download from the [Multi-Resolution Land Characteristics Consortium (MRLC) website](https://www.mrlc.gov/data/nlcd-2016-land-cover-conus), which describes the dataset as a product from the U.S. Geological Survey and several other federal agencies. The data is gathered via a multitude of methods, listed in the description at the link above. The dataset is a raster dataset which breaks down each pixel of the contiguous United States into the specified categories shown below:
 
+![](https://www.mrlc.gov/sites/default/files/NLCD_Colour_Classification_Update.jpg){width=25%}
 
-```{r cars}
-summary(cars)
+### New York State County polygon data
+To get polygon data for NYS, I plan on using the NYS Civil Boundaries County Shoreline data from NYS GIS Clearinghouse. This dataset has accurate polygon edges for the edge of NYS counties. This is essential because these polygons will be used to extract data from the NLCD dataset, which has accurate data on the shorelines of state and county polygons. The polygon data can be downloaded [here](http://gis.ny.gov/gisdata/metadata/nysgis.Counties_Shoreline.pdf).
+
+## Proposed Methods: 
+There are a few main tasks that must be addressed for this project:
+
+1. Extracting entire U.S. NLCD dataset to just the outline of NYS
+2. Calculating percent coverage values for land use cover and type for each county
+3. Creating choropleth map for each pathogen at county level across all years
+4. Calculating Spearman-rank correlations for each pathogen's prevalence at county level.
+5. Creating interactive maps that display the following when a county is highlighted/clicked:
+    * Table for pathogen prevalence by year
+    * Table for percentage of area covered by specific land use / land cover types
+    * Time-series graph of pathogen prevalence by year
+    
+### Extracting / Calculating percent coverage values
+The first step for this project is to load the NLCD 2016 dataset and NYS shoreline polygon into R via the raster and sf packages. 
+The raster package uses the following call:
+```{r, eval=FALSE}
+raster()
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+to load raster data, while the sf package uses the following call:
+```{r, eval=FALSE}
+read_sf()
 ```
+to load polygon data from an outside data source.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Once these two datasets are loaded, I will check their coordinate reference (CRS) systems with: 
+```{r, eval=FALSE}
+crs()
+```
+from the raster package, and adjust reference systems as necessary. Once both datasets are on the same CRS, the NLCD must be extracted to match the size of the NYS polygon. In the same extraction step, percent of area covered by specific land cover / type categories can be calculated This will be done with the following call:
+```{r, eval=FALSE}
+extract(NLCD,NYScounties,fun=sum)
+```
+Summing the values for each category will then allow their total percent area to be calculated. There may be some required spatial subsetting prior to this step, but that still needs to be examined.
+
+### Creating choropleth maps
+In order to create choropleth maps for each pathogen across all years in the data, county level pathogen data will first have to be joined to the spatial polygon data. This is possible through the simple call of:
+```{r, eval=FALSE}
+merge()
+```
+Once the data is joined, the choropleth map can be created. In order to create the map, I will be using the tmap package. The tmap package will allow me to create choropleth maps through the following calls:
+```{r, eval=FALSE}
+tm_shape(NYScounties) +
+  tm_fill(col="Borr_burgdorferi_prev") +
+  tm_borders()
+```
+The above calls will create a choropleth map of a color scale ordered by the prevalence of <i>B. burgdorferi</i> in every county. Other fine tuning will likely be necessary to make the maps, including facets for years and pathogen types. 
+
+### Calculating Spearman-rank correlations 
+The analysis phase of this project comes into play when examining the land use / land cover types at the county level, and how they are related to individual pathogen prevalence. Spearman-rank correlation is a a statistical test for correlation that is different from the standard Pearson's test. It is utilized when by giving observations in a variable a value of their relative rank compared to all other observations in the data. This is useful when examining pathogen prevalence data, where some of the pathogens will have a 0% prevalence for many of the years in the study. Having too many 0 values can provide a misleading result in the Pearson's test of correlation, and will be more accurate to the truth with the Spearman-rank. The Spearman-rank test is used in R with the following call:
+```{r, eval=FALSE}
+raster(Landuse,County,method="spearman")
+```
+After conducting the Spearman-rank test, I will organize the results in the table using a loop.
+
+### Creating interactive maps displaying data
+In order to create interactive maps to display the data mentioned above, I will be utilizing the leaflet package. The leaflet package creates interactive maps of polygons through the following call with:
+```{r, eval=FALSE}
+leaflet(Countypolygons) %>%
+  addPolygons(color="")
+```
+Of note, the data trying to be displayed in the interactive map will have to merged beforehand. 
+
+In order to add tables, images and graphs into the interactive map, the leafpop package is required. In order to add these features, something to the effect of the following call is utilized:
+```{r, eval=FALSE}
+leaflet(data, popup = popupTable())
+```
+In the above call, the text 'Table' can be replaced with Image or Graph for the desired data display.
+
+## Expected results
+I anticipate a few difficulties with this project: 
+
+* The first difficulty is that NLCD 2016 file is very large, and may require me to download the file on my local machine instead of downloading it directly from the internet. Ideally, it will be downloaded from the internet within the R code for reproducibility. 
+
+* The second difficulty I anticipate is getting the extracted NLCD data into percentage format. This may require me to subset by category and calculate area for each NLCD category. This will be labor intensive if I cannot find an elegant way to work through this problem.
