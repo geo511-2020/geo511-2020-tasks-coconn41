@@ -67,7 +67,7 @@ The New York State Department of Health (NYSDOH) Vector Ecology Lab conducts sea
 ### Land use / land cover data
 Quality raster data for land use and/or land cover type is available from different sources. For this project, I plan to use the National Land Cover Dataset (NLCD) 2016 (CONUS). The NLCD 2016 is available for download from the [Multi-Resolution Land Characteristics Consortium (MRLC) website](https://www.mrlc.gov/data/nlcd-2016-land-cover-conus), which describes the dataset as a product from the U.S. Geological Survey and several other federal agencies. The data is gathered via a multitude of methods, listed in the description at the link above. The dataset is a raster dataset which breaks down each pixel of the contiguous United States into the specified categories shown below:
 
-![](https://www.mrlc.gov/sites/default/files/NLCD_Colour_Classification_Update.jpg){width=25%}
+<img src="https://www.mrlc.gov/sites/default/files/NLCD_Colour_Classification_Update.jpg" width="300" height="600">
 
 ### New York State County polygon data
 To get polygon data for NYS, I plan on using the NYS Civil Boundaries County Shoreline data from NYS GIS Clearinghouse. This dataset has accurate polygon edges for the edge of NYS counties. This is essential because these polygons will be used to extract data from the NLCD dataset, which has accurate data on the shorelines of state and county polygons. The polygon data can be downloaded [here](http://gis.ny.gov/gisdata/metadata/nysgis.Counties_Shoreline.pdf).

@@ -119,7 +119,7 @@ of methods, listed in the description at the link above. The dataset is
 a raster dataset which breaks down each pixel of the contiguous United
 States into the specified categories shown below:
 
-![](https://www.mrlc.gov/sites/default/files/NLCD_Colour_Classification_Update.jpg)
+<img src="https://www.mrlc.gov/sites/default/files/NLCD_Colour_Classification_Update.jpg" width="300" height="600">
 
 ### New York State County polygon data
 
