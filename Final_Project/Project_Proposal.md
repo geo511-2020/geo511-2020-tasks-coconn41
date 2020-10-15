@@ -1,13 +1,6 @@
 GEO 511 Project Proposal
 ================
 Collin O’Connor
-10/14/2020
-
-<style type="text/css">
-h1.title {text-align: center;}
-h4.author {text-align: center;}
-h4.date {text-align: center;}
-</style>
 
 ## Problem / Question:
 

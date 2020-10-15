@@ -1,19 +1,8 @@
 ---
 title: "GEO 511 Project Proposal"
 author: "Collin O'Connor"
-date: "10/14/2020"
 output: github_document
 ---
-
-<style type="text/css">
-h1.title {text-align: center;}
-h4.author {text-align: center;}
-h4.date {text-align: center;}
-</style>
-
-
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
