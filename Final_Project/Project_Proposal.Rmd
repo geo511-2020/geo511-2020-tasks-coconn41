@@ -1,9 +1,18 @@
 ---
-title: "Project_Proposal"
+title: "GEO 511 Project Proposal"
 author: "Collin O'Connor"
 date: "10/14/2020"
 output: html_document
 ---
+
+<style type="text/css">
+h1.title {text-align: center;}
+h4.author {text-align: center;}
+h4.date {text-align: center;}
+</style>
+
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,15 +27,45 @@ The deer tick or blacklegged tick (<i>Ixodes scapularis</i>) is the most medical
 * <i>Babesia microti</i> - the causitive agent of babesiosis in humans
 * <i>Borrelia miyamotoi</i> - causative of a relapsing tick fever 
 
-The prevalence of the above pathogens varies both spatially and temporally in NYS, which results in varying risk for NYS citizens. 
+The prevalence of the above pathogens varies both spatially and temporally in NYS, which results in varying risk for NYS citizens. Because these pathogens are not transmitted from tick to tick transovarially, they are required to be maintained throughout populations of animal hosts in the various ecosystems of NYS. Data suggests that certain land use and land cover types are beneficial for populations of animals which maintain these pathogens. This project aims to explore any trends between pathogen prevalence within <i>I. scapularis</i> at the county level and land use / land cover types in NYS.
 
 
 
 
 
+## Examples:
+### Image 1
+![](https://www.lib.ncsu.edu/sites/default/files/wysiwyg-uploads/NLCD_NC.jpg)
 
+Image Example 1 is an extract of the National Land Cover Dataset (NLCD). More specifically, this extract is the NLCD raster extracted by the shape of North Carolina. This serves as a useful example of what the NLCD extract raster will look like, only substituting the shape of NYS.
 
+### Image 2
+![](https://ars.els-cdn.com/content/image/1-s2.0-S0924271620300587-gr9.jpg)
 
+Image 2 is from a publication that explains the land cover change index in the NLCD. This image shows aggregate statistics for multiple polygons within a larger polygon. This is what I am to do with the counties of NYS. Although this image does not use the specific variables I expect to explore, it shows the concept of having multiple polygons take values from a raster (in this case the NLCD) to later be used for analysis.
+
+### Image 3
+![](https://www.cdc.gov/csels/dsepd/ss1978/lesson4/images/Figure4.3.jpg)
+
+Image 3 is an example of a time-series graph from the CDC. This particular graph shows age at death in years along the y-axis, and year along the x-axis. One of the goals of this project is to create graphs that visualize the change in prevalence over time for each of the pathogens described earlier. This should be done for each county in NYS.
+
+### Link 1
+[Interactive Map Link](https://pad.human.cornell.edu/profiles/index.cfm)
+
+Link 1 leads to an example of an interactive map of NYS County polygons which contain demographic, social and economic data, courtesy of Cornell University. This example shows one of the goals of this project. I hope to have an interactive map of counties that contains the summary data for the tick pathogen prevalence data as well as the land use / land cover data. Additionally, the time-series charts (see image 3) for each county should also appear. Ideally, when clicking on a county, these features should either pop up or open in a new link, as this example from Cornell does. 
+
+## Proposed Data Sources:
+There are three data sources required for this project:
+
+1. Tick pathogen prevalence data
+2. Land use / land cover data
+3. Spatial polygon data of NYS Counties
+
+### Tick pathogen prevalence data
+The New York State Department of Health (NYSDOH) Vector Ecology Lab conducts seasonal tick-surveys throughout NYS. These surveys measure density of ticks in the environment, and also measure the pathogen prevalence of <i>B. burgdorferi</i>, <i>A. phagocytophilum</i>, <i>B. microti</i>, and <i>B. miyamotoi</i> in the collected ticks. Pathogen prevalence is determined through PCR testing of individual tick specimens. These data are available to the public via [Health Data NY](https://health.data.ny.gov/), for both [adult](https://health.data.ny.gov/Health/Access-Adult-Deer-Tick-Collection-Data-by-County-E/fkdr-6a5t) and [nymphal](https://health.data.ny.gov/Health/Access-Nymph-Deer-Tick-Collection-Data-by-County-E/7qid-kum3) tick density. These data on Health Data NY show tables and maps, but do not conduct any statistical testing or plot any time-series charts. They also do not utilize and ecological data, as is the goal of this project.
+
+### Land use / land cover data
+Quality raster data for land use and/or land cover type is available from different sources. For this project, I plan to use the [National Land Cover Dataset (NLCD) 2016 (CONUS)](https://www.mrlc.gov/data/nlcd-2016-land-cover-conus). The NLCD 
 
 
 ```{r cars}
