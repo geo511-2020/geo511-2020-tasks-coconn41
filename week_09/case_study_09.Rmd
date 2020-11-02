@@ -4,4 +4,47 @@ author: Your Name
 date: August 1, 2020
 output: github_document
 ---
+
+``` {r libraries}
+library(sf)
+library(tidyverse)
+library(ggmap)
+library(rnoaa)
+library(spData)
+```
  
+``` {r data}
+data(world)
+data(us_states)
+```
+
+```{r NOAA}
+dataurl="https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/shapefile/IBTrACS.NA.list.v04r00.points.zip"
+tdir=tempdir()
+download.file(dataurl,destfile=file.path(tdir,"temp.zip"))
+unzip(file.path(tdir,"temp.zip"),exdir = tdir)
+list.files(tdir)
+storm_data = read_sf(list.files(tdir,pattern='.shp',full.names = T))
+```
+
+```{r clean1}
+fiftiesstorms = storm_data %>%
+  filter(SEASON >= 1950) %>%
+  mutate_if(is.numeric, function(x) ifelse(x==-999.0,NA,x)) %>%
+  mutate(decade=(floor(year/10)*10))            
+```
+
+```{r BBID}
+region = st_bbox(fiftiesstorms)
+```
+
+```{r plotting}
+ggplot() +
+  geom_sf(data=world) +
+  geom_point(data=fiftiesstorms,aes(x=LON,y=LAT)) +
+  facet_wrap(~decade)
+```
+
+```
+ 
+```

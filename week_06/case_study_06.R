@@ -45,8 +45,6 @@ tm_shape(highval) +
   tm_layout(legend.outside=TRUE,
             legend.outside.position = "bottom")
 
-    
-?guide_colorbar
 # table below
 
 hotcontinent = highval@data %>%
