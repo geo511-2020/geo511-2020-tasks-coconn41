@@ -93,15 +93,27 @@ tdates=names(lst)%>%
 
 names(lst)=1:nlayers(lst)
 lst=setZ(lst,tdates)
-
 ```
+
+```{r Timeseries}
 lw=SpatialPoints(data.frame(x= -78.791547,y=43.007211))
 projection(lw)="+proj=longlat"
-
+spTransform(lw, CRSobj = proj4string(lst))
+p1=t(raster::extract(lst,lw,buffer=1000,fun=mean,na.rm=T))
+p1.dates=getZ(lst)
+t_series = cbind.data.frame(p1,p1.dates)
+names(t_series)=c("MLST","Date")
+ggplot(t_series,aes(x=Date,y=MLST)) +
+  geom_point() +
+  geom_smooth(method="loess",span=.02) +
+  ylab(expression(paste("Monthly Mean Land Surface Temperature",~degree,"C",sep="")))
 ```
 
-```
-
+```{r convert months}
+lst$tmonth=as.numeric(format(getZ(lst),"%m"))
+lst_month=stackApply(x =lst,fun = mean)
+names(lst_month)=month.name
+plot(lst_month)
 ```
 
 ```
