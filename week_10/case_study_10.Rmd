@@ -15,7 +15,7 @@ library(ncdf4)
 library(sf)
 ```
 
-```{r data load}
+```{r data load,message=F}
 dir.create("data",showWarnings = F) #create a folder to hold the data
 
 lulc_url="https://github.com/adammwilson/DataScienceData/blob/master/inst/extdata/appeears/MCD12Q1.051_aid0001.nc?raw=true"
@@ -110,10 +110,25 @@ ggplot(t_series,aes(x=Date,y=MLST)) +
 ```
 
 ```{r convert months}
-lst$tmonth=as.numeric(format(getZ(lst),"%m"))
-lst_month=stackApply(x =lst,fun = mean)
+tmonth=as.numeric(format(getZ(lst),"%m"))
+lst_month=stackApply(x =lst,fun = mean,na.rm=T,indices=tmonth)
 names(lst_month)=month.name
-plot(lst_month)
+gplot(lst_month)+
+      geom_raster(aes(fill=value)) +
+  scale_fill_gradient(low='blue',high='red') +
+  facet_wrap(~variable) +
+  theme(axis.ticks.x=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank())
+kable(cellStats(lst_month,mean))
 ```
+
+``` {r violinplot}
+resample(lulc,lst_month,method='ngb')
+lcds1=cbind.data.frame(na.omit(values(lst_month)),ID=values(na.omit(lulc[[1]]))) 
+gather(key='month',value = 'value',-ID)
+mutate(ID=as.numeric())
+
 
 ```
