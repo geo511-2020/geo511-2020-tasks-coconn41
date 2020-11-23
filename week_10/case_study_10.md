@@ -1,11 +1,9 @@
----
-title: "Case Study 10"
-author: Collin O'Connor
-date: November 12, 2020
-output: github_document
----
+Case Study 10
+================
+Collin O’Connor
+November 12, 2020
 
-```{r libraries, echo=T,results='hide',warning=F,message=F}
+``` r
 library(raster)
 library(rasterVis)
 library(rgdal)
@@ -16,7 +14,7 @@ library(ncdf4)
 library(sf)
 ```
 
-```{r data load,echo=T,results='hide',warning=F,message=F}
+``` r
 dir.create("data",showWarnings = F) #create a folder to hold the data
 
 lulc_url="https://github.com/adammwilson/DataScienceData/blob/master/inst/extdata/appeears/MCD12Q1.051_aid0001.nc?raw=true"
@@ -29,9 +27,14 @@ lulc=stack("data/MCD12Q1.051_aid0001.nc",varname="Land_Cover_Type_1")
 lst=stack("data/MOD11A2.006_aid0001.nc",varname="LST_Day_1km")
 ```
 
-```{r lulc_1year}
+``` r
 lulc=lulc[[13]]
 plot(lulc)
+```
+
+![](case_study_10_files/figure-gfm/lulc_1year-1.png)<!-- -->
+
+``` r
   Land_Cover_Type_1 = c(
     Water = 0, 
     `Evergreen Needleleaf forest` = 1, 
@@ -61,7 +64,16 @@ plot(lulc)
 kable(head(lcd))
 ```
 
-``` {r convertrast}
+|                             | ID | landcover                   | col      |
+| :-------------------------- | -: | :-------------------------- | :------- |
+| Water                       |  0 | Water                       | \#000080 |
+| Evergreen Needleleaf forest |  1 | Evergreen Needleleaf forest | \#008000 |
+| Evergreen Broadleaf forest  |  2 | Evergreen Broadleaf forest  | \#00FF00 |
+| Deciduous Needleleaf forest |  3 | Deciduous Needleleaf forest | \#99CC00 |
+| Deciduous Broadleaf forest  |  4 | Deciduous Broadleaf forest  | \#99FF99 |
+| Mixed forest                |  5 | Mixed forest                | \#339966 |
+
+``` r
 # convert to raster (easy)
 lulc=as.factor(lulc)
 
@@ -69,7 +81,9 @@ lulc=as.factor(lulc)
 levels(lulc)=left_join(levels(lulc)[[1]],lcd)
 ```
 
-```{r ggplot,warning=F}
+    ## Joining, by = "ID"
+
+``` r
 # plot it
 gplot(lulc)+
   geom_raster(aes(fill=as.factor(value)))+
@@ -81,13 +95,22 @@ gplot(lulc)+
   guides(fill=guide_legend(ncol=1,byrow=TRUE))
 ```
 
-```{r plotall}
+![](case_study_10_files/figure-gfm/ggplot-1.png)<!-- -->
+
+``` r
 plot(lst[[1:12]])
+```
+
+![](case_study_10_files/figure-gfm/plotall-1.png)<!-- -->
+
+``` r
 offs(lst)=-273.15
 plot(lst[[1:10]])
 ```
 
-```{r Date_conversion,message=F,warning=F}
+![](case_study_10_files/figure-gfm/plotall-2.png)<!-- -->
+
+``` r
 tdates=names(lst)%>%
   sub(pattern="X",replacement="")%>%
   as.Date("%Y.%m.%d")
@@ -96,21 +119,14 @@ names(lst)=1:nlayers(lst)
 lst=setZ(lst,tdates)
 ```
 
-```{r Timeseries,echo=F,message=F,warning=F,comment=NA}
-lw=SpatialPoints(data.frame(x= -78.791547,y=43.007211))
-projection(lw)="+proj=longlat"
-spTransform(lw, CRSobj = proj4string(lst))
-p1=t(raster::extract(lst,lw,buffer=1000,fun=mean,na.rm=T))
-p1.dates=getZ(lst)
-t_series = cbind.data.frame(p1,p1.dates)
-names(t_series)=c("MLST","Date")
-ggplot(t_series,aes(x=Date,y=MLST)) +
-  geom_point() +
-  geom_smooth(method="loess",span=.02) +
-  ylab(expression(paste("Monthly Mean Land Surface Temperature",~degree,"C",sep="")))
-```
+    class       : SpatialPoints 
+    features    : 1 
+    extent      : 1387674, 1387674, 2349491, 2349491  (xmin, xmax, ymin, ymax)
+    crs         : +proj=aea +lat_0=23 +lon_0=-96 +lat_1=29.5 +lat_2=45.5 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs 
 
-```{r convert months}
+![](case_study_10_files/figure-gfm/Timeseries-1.png)<!-- -->
+
+``` r
 tmonth=as.numeric(format(getZ(lst),"%m"))
 lst_month=stackApply(x =lst,fun = mean,na.rm=T,indices=tmonth)
 names(lst_month)=month.name
@@ -122,10 +138,30 @@ gplot(lst_month)+
         axis.ticks.y=element_blank(),
         axis.text.x=element_blank(),
         axis.text.y=element_blank())
+```
+
+![](case_study_10_files/figure-gfm/convert%20months-1.png)<!-- -->
+
+``` r
 kable(cellStats(lst_month,mean))
 ```
 
-``` {r violinplot_cleaning}
+|           |          x |
+| :-------- | ---------: |
+| January   | \-2.127506 |
+| February  |   8.710271 |
+| March     |  18.172077 |
+| April     |  23.173591 |
+| May       |  26.990005 |
+| June      |  28.840144 |
+| July      |  27.358260 |
+| August    |  22.927727 |
+| September |  15.477510 |
+| October   |   8.329881 |
+| November  |   0.586179 |
+| December  | \-4.754134 |
+
+``` r
 lulc2=resample(lulc,lst,method='ngb')
 lcds1=cbind.data.frame(values(lst_month),ID=values(lulc2[[1]])) 
 testa= lcds1 %>% 
@@ -134,12 +170,16 @@ testa= lcds1 %>%
                                         levels=month.name,
                                         ordered=T))
 testb=left_join(lcds1,lcd)
-testc = testb %>%
-  filter(landcover%in%c("Urban & built-up","Deciduous Broadleaf forest"))
-
 ```
 
-```{r final_plot}
+    ## Joining, by = "ID"
+
+``` r
+testc = testb %>%
+  filter(landcover%in%c("Urban & built-up","Deciduous Broadleaf forest"))
+```
+
+``` r
 testd=reshape2::melt(testc, id.vars="landcover",
                measure.vars=c("January","February","March",
                               "April","May","June","July","August",
@@ -157,3 +197,4 @@ ggplot(testd,aes(x=variable,y=value))+
   facet_wrap(~landcover)
 ```
 
+![](case_study_10_files/figure-gfm/final_plot-1.png)<!-- -->

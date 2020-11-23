@@ -4,4 +4,55 @@ author: Your Name
 date: August 1, 2020
 output: github_document
 ---
- 
+
+```{r library_load}
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(htmlwidgets)
+library(widgetframe)
+library(rnoaa)
+library(xts)
+library(dygraphs)
+```
+
+```{r data_download}
+d=meteo_tidy_ghcnd("USW00014733",
+                   date_min = "2016-01-01", 
+                   var = c("TMAX"),
+                   keep_flags=T) %>% 
+   mutate(date=as.Date(date),
+          tmax=as.numeric(tmax)/10) #Divide the tmax data by 10 to convert to degrees.
+```
+
+```{r create_timeseries}
+d2=xts(d$tmax,order.by = d$date)
+```
+
+
+```{r plot}
+g1=dygraph(d2,
+        main = "Daily Maximum Temperature in Buffalo, NY")
+  dyRangeSelector(g1,dateWindow = c("2020-01-01", "2020-10-31"))
+```
+
+```{r precipdownload}
+p=meteo_tidy_ghcnd("USW00014733",
+                   date_min = "2016-01-01", 
+                   var = c("PRCP"),
+                   keep_flags=T) %>% 
+   mutate(date=as.Date(date),
+          prcp=as.numeric(prcp)/10)
+```
+
+```{r predipdata}
+p2=xts(p$prcp,order.by = p$date)
+```
+
+```{r prcpmap}
+h1=dygraph(p2,main = "Daily Precipitation in Buffalo, NY")
+  dyRangeSelector(h1,dateWindow = c("2020-01-01", "2020-10-31"))
+```
+
+```
+```

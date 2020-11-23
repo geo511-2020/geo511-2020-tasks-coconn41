@@ -1,7 +1,37 @@
 ---
 title: "Case Study 08"
-author: Your Name
+author: Collin O'Connor
 date: August 1, 2020
-output: github_document
+output:
+  html_document: default
+  github_document: default
+  powerpoint_presentation: default
+  word_document: default
 ---
- 
+
+```{r libraries, echo=TRUE,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+## Reading in data
+```{r chunk_1,results='hide',message=FALSE, echo=F}
+df <- read.table('ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_annmean_mlo.txt')
+names(df)=c('year','mean','unc')
+```
+
+```{r chunk_2,message=FALSE, echo=F}
+ggplot(data=df,aes(x=year,y=mean)) +
+  geom_line() +
+  xlab("Year") +
+  ylab(expression(paste('Mean Annual CO'[2],' Concentration',sep=""))) +
+  ggtitle(expression(paste("Increase in Atmospheric CO"[2]," Over Time")))
+  df2= df[seq(1, nrow(df), 5), ]
+  knitr::kable(df2,format="html",
+    caption = 'Mean Annual Atmospheric Carbon Dioxide Concentration (Every Fifth Year Displayed)') %>%
+    kable_paper('hover') %>%
+    as_image(width = 10,file = "Newtable.png")
+```
+```{r usethislinetorun, eval=FALSE,echo=FALSE}
+#rmarkdown::render(paste(getwd(),"/week_08/case_study_08.Rmd",sep = ""),output_format = "all")
+```

@@ -1,0 +1,112 @@
+---
+title: "GGally - ggpairs function"
+author: "Collin O'Connor"
+date: "9/17/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(GGally)
+```
+<style>
+  .col2 {
+    columns: 2 300px;         /* number of columns and width in pixels*/
+    -webkit-columns: 2 300px; /* chrome, safari */
+    -moz-columns: 2 300px;    /* firefox */
+  }
+</style>
+
+## Author background 
+<!-- The above style help was taken from https://stackoverflow.com/questions/31753897/2-column-section-in-r-markdown> -->
+<div class="col2">
+Barret Schloerke, Ph.D.
+
+* Doctor of Philosphy in Statistics from Purdue University
+
+* Software engineer at RStudio
+
+* Recent R packages include:
+  * GGally
+  * autocogs
+  * gqlr
+
+
+![](Barret_Schloerke.jpeg){width=400px}
+
+  
+
+
+
+  
+</div>
+
+## Uses
+* GGally contains several functions for creating different plotting matrices
+
+* Useful for univariate and bivariate analysis
+
+* ggpairs does three things in one line of code
+
+  * Scatterplot specific variables to examine for correlation
+
+  * Creates a distribution graph for single variables
+
+  * Tests for correlation
+
+## Univariate analysis
+
+* Needed to determine distribution of variables
+
+* Allows researcher to do proper analysis
+
+  * Basic univariate analysis procedure is to plot a histogram
+  
+  * Other things to look at are summary statistics such as mean, median, IQR, etc.
+
+
+## Univariate analysis (continued)  
+```{r hist, echo=TRUE}
+hist(mtcars$mpg, main="mtcars MPG distribution",
+     xlab="Miles per Gallon")
+#Shows this variable is slightly skewed, but probably normal enough
+```
+
+
+## Bivariate analysis
+* May want to test for correlation 
+  * Base R can do a test of correlation
+  
+```{r corr, echo=TRUE}
+cor.test(mtcars$mpg,mtcars$disp)
+```
+## Bivariate analysis (continued)
+```{r singlescatter, echo=TRUE}
+plot(mtcars$mpg,mtcars$disp,xlab="Miles per Gallon",
+     ylab="Displacement (cu.in.)",
+     main="Relating MPG to Displacement in mtcars dataset")
+```
+
+## Trying to plot full dataset using base R
+```{r fullplot, echo=TRUE}
+plot(mtcars[-c(2,8:11)])
+```
+
+
+
+## Using the ggpairs function
+* ggpairs in GGally package combines 3 needs
+
+  * Creates the same scatter plots as base R without flipping y axis
+  
+  * Shows a distribution graph of single variable
+  
+  * Performs a test of correlation between intersecting variables in matrix
+  
+## Using the ggpairs function (continued)
+```{r GGally, echo = TRUE}
+ggpairs(mtcars[-c(2,8:11)])
+# mtcars[-c(2,8:11)] are the quant. continuous variables in mtcars
+```
+
+

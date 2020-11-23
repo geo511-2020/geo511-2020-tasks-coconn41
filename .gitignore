@@ -6,6 +6,7 @@
 *.csv
 *.tif
 *cache*
+*data*
 .zip
 .bil
 .hdr

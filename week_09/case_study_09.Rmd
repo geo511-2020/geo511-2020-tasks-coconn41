@@ -1,7 +1,77 @@
 ---
 title: "Case Study 09"
-author: Your Name
+author: Collin O'Connor
 date: August 1, 2020
 output: github_document
 ---
+
+```{r include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(comment = NA)
+```
+
+``` {r libraries, echo = F, message = F}
+library(sf)
+library(tidyverse)
+library(ggmap)
+library(rnoaa)
+library(spData)
+library(kableExtra)
+```
  
+``` {r data, echo = F}
+data(world)
+data(us_states)
+```
+
+```{r NOAA,echo=F}
+dataurl="https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r00/access/shapefile/IBTrACS.NA.list.v04r00.points.zip"
+tdir=tempdir()
+download.file(dataurl,destfile=file.path(tdir,"temp.zip"))
+unzip(file.path(tdir,"temp.zip"),exdir = tdir)
+#list.files(tdir)
+storm_data = read_sf(list.files(tdir,pattern='.shp',full.names = T))
+```
+
+```{r clean1, echo = F}
+fiftiesstorms = storm_data %>%
+  filter(SEASON >= 1950) %>%
+  mutate_if(is.numeric, function(x) ifelse(x==-999.0,NA,x)) %>%
+  mutate(decade=(floor(year/10)*10))            
+```
+
+```{r BBID, echo = F}
+region = st_bbox(fiftiesstorms)
+```
+
+```{r plotting, eval = T, echo = F, message=F}
+ggplot() +
+  geom_sf(data=world) +
+  geom_point(data=fiftiesstorms,aes(x=LON,y=LAT)) +
+  facet_wrap(~decade) +
+  stat_bin2d(data=fiftiesstorms, aes(y=st_coordinates(fiftiesstorms)[,2],
+                                     x=st_coordinates(fiftiesstorms)[,1]),bins=100) +
+  scale_fill_distiller(palette="YlOrRd",trans='log',direction=-1, breaks=c(1,10,100,1000)) +
+  coord_sf(ylim=region[c(2,4)],xlim=region[c(1,3)]) +
+  ggtitle("Hurricane paths by decades: 1950-2020") +
+  ylab("Latitutde") +
+  xlab("Longitude")
+```
+
+```{r calc5, echo = F,message=F}
+us_states_transform = us_states %>%
+  st_transform(crs=st_crs(fiftiesstorms))
+names(us_states_transform)[2]="state"
+storm_states = st_join(fiftiesstorms,us_states_transform,join=st_intersects,left=F)
+
+storm_table = storm_states %>%
+  group_by(state) %>%
+  summarize(storms=length(unique(NAME))) %>%
+  arrange(desc(storms)) %>%
+  slice(1:5)
+```
+
+``` {r table, eval=T,echo=F,message=F}
+knitr::kable(st_drop_geometry(storm_table),format="simple",
+    caption = 'Unique Hurricanes per State (1950 - 2020)') 
+```
